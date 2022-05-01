@@ -51,25 +51,44 @@ export class PlotXandO extends Xando {
         this.x = x;
         this.y = y;
         this.colorset = false;
+        this.selectDOM = document.getElementById("select");
     }
 
     Handle_Game_structure() {
+        // responsible for adding x and o in the array
         XOstate.setGame = {x:this.x,y:this.y};
     }
 
     switchTurns() {
-        var state =  XOstate.setState;
         return XOstate.getState.nextplayer === "x" ? XOstate.setState = {nextplayer: "o"} : XOstate.setState = {nextplayer: "x"}
+    }
+
+    useTouchAndPlay() {
+        const elementPos = this.game_structure[this.y][this.x];
+
+        const cell = document.querySelector(`[data-tile="${elementPos}"]`)
+        const select =  document.getElementById("select");
+
+        console.log(cell.textContent === "x");
+        if(cell.textContent === "x" || cell.textContent === "o") {
+            console.log(select);
+            select.textContent = ""
+            return
+        }
+           select.textContent = XOstate.getState.nextplayer
     }
 
     plot() {
         const elementPos = this.game_structure[this.y][this.x];
 
         const cell = document.querySelector(`[data-tile="${elementPos}"]`)
+        
+        if(cell.textContent === "x" || cell.textContent === "o"){
+            return this.useTouchAndPlay()
+        }
 
         this.Handle_Game_structure(elementPos)
-        
-        
+    
         this.PlotXandOUI(cell)
         this.switchTurns();
     }

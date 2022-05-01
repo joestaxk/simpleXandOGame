@@ -39,6 +39,8 @@ export default class Gamepad {
     controls(ev) {
         ev = ev;
         var acceptableKeys= ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"]
+        const X = axis_[0];
+        const Y = axis_[1]
 
         if(acceptableKeys.some(key => key === ev.key)) {
             switch(ev.key) {
@@ -78,6 +80,7 @@ export default class Gamepad {
  * axis is X:0||Y:1
  * point is the movement
  */
+
 function controlHelper(axis,point=0) {
     const limit = 2;
 
@@ -100,22 +103,31 @@ function controlHelper(axis,point=0) {
 const X = 0
 const Y = 1;
 // AXIS Y
+function avoidDryPrincipleOnUseTouchAndPlay(){
+    const plot = new PlotXandO(axis_[0],axis_[1])
+    plot.useTouchAndPlay()
+}
+
 function ArrowUp() {
+    avoidDryPrincipleOnUseTouchAndPlay()
     return controlHelper(Y, axis_[Y]-1) // add up along y axis
 }
 
 // AXIS Y
 function ArrowDown() {
+    avoidDryPrincipleOnUseTouchAndPlay()
     return controlHelper(Y, axis_[Y]+1) // add up along y axis
 }
 
 // AXIS X
 function ArrowLeft() {
+    avoidDryPrincipleOnUseTouchAndPlay()
     return controlHelper(X, axis_[X]-1) // add up along y axis
 }
 
 // AXIS X
 function ArrowRight() {
+    avoidDryPrincipleOnUseTouchAndPlay()
     return controlHelper(X, axis_[X]+1) // add up along y axis
 }
 
