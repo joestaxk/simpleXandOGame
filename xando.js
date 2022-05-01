@@ -50,6 +50,7 @@ export class PlotXandO extends Xando {
 
         this.x = x;
         this.y = y;
+        this.colorset = false;
     }
 
     Handle_Game_structure() {
@@ -71,7 +72,6 @@ export class PlotXandO extends Xando {
         
         this.PlotXandOUI(cell)
         this.switchTurns();
-        return elementPos;
     }
 
     PlotXandOUI(cell) {
@@ -89,5 +89,35 @@ export class PlotXandO extends Xando {
 
         select.textContent = XOstate.getState.nextplayer==="x"?"o":"x"
         cell.textContent = XOstate.getState.nextplayer
+        this.colorTab(select.textContent, cell)
+    }
+
+    colorTab(player, cell) {
+        /**
+         * Different color plate ex:
+         * if(X) use blue
+         * else if(O) use light blue
+         */
+        var color,saturation,hue;
+        if(!this.colorset){
+            color = 0
+            saturation = 7
+            hue = 75
+        }
+         
+         const colorPlate_x = `hsl(${color}, ${saturation - 10}%, ${hue - 20}%);`
+         const colorPlate_y = `hsl(${color}, ${saturation - 25}%, ${hue - 5}%);`
+
+        player = typeof player === "string"?player:null;
+
+        if(player) {
+            // player = player === "x"?"x":"o";
+            console.log(player, colorPlate_x);
+            if(player === "x") {
+                cell.style.cssText= `background:${colorPlate_x}`
+            }else if(player === "o") {
+                cell.style.cssText= `background:${colorPlate_y}`
+            }
+        }
     }
 }

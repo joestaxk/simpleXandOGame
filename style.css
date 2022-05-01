@@ -62,3 +62,6 @@ body {
 .active{
     color: #ccc;
 }
+.lockcell{
+    background: hsl(0, 7%, 75%);
+}
