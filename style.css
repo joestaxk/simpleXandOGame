@@ -1,0 +1,64 @@
+*,*::after,*::before {
+    box-sizing: border-box;
+}
+
+body {
+    background: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+}
+.game_title {
+    font-size: 8vmin;
+    font-family: 'Times New Roman', Times, serif;
+    color: rgb(60, 60, 60);
+}
+#game_board {
+    position: relative;
+    --GRID-SIZE: 3;
+    --GRID-COLS : 20vmin;
+    --GRID-ROWS : 20vmin;
+    display: grid;
+    background: #aaa;
+    font-size: 7.5vmin;
+    font-family: Arial, Helvetica;
+    grid-template-columns: repeat(var(--GRID-SIZE),var(--GRID-COLS));
+    grid-template-rows: repeat(var(--GRID-SIZE),var(--GRID-COLS));
+    grid-gap: 1vmin;
+    padding: 3vmin;
+    border-radius: 1vmin;
+    overflow: hidden;
+    /* cursor: none; */
+}
+
+.cell{
+    position: relative;
+    background: #ccc;
+    border-radius: 1vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10.5vmin;
+}
+#select {
+    position: absolute;
+    background: rgba(167, 4, 4, 0.788);
+    width: 20vmin;
+    height: 20vmin;
+    border-radius: 1vmin;
+    top: calc(var(--y) * (1vmin + 20vmin) + 3vmin);
+    left: calc(var(--x) * (1vmin + 20vmin) + 3vmin);
+    transition: .5s all;
+    font-size: 10.5vmin;
+    color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.active{
+    color: #ccc;
+}
