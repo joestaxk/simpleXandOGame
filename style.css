@@ -4,18 +4,21 @@
 
 body {
     background: #333;
+    min-width: 100vmin;
+    margin: 0;
+    min-height: 100vmin;
+    min-width: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0;
+    user-select: none;
+}
+.game_container {
+    width: 100%;
     height: 100vh;
+    margin-top: 0;
 }
-.game_title {
-    font-size: 8vmin;
-    font-family: 'Times New Roman', Times, serif;
-    color: rgb(60, 60, 60);
-}
+
 #game_board {
     position: relative;
     --GRID-SIZE: 3;
@@ -32,6 +35,7 @@ body {
     border-radius: 1vmin;
     overflow: hidden;
     /* cursor: none; */
+    z-index: 0;
 }
 
 .cell{
@@ -59,9 +63,312 @@ body {
     align-items: center;
 }
 
-.active{
-    color: #ccc;
-}
 .lockcell{
     background: hsl(0, 7%, 75%);
+}
+
+/* Build other part of the game */
+
+.game_header {
+    width: 100%;
+    height: 10vmin;
+    background: #000;
+    display: flex;
+    justify-content: space-between;
+    padding: 1vmin;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    position: relative;
+}
+.chances{
+    width: 10vmin;
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+    /* margin: 2vmin; */
+}
+.chances .chance {
+    width: 10px;
+    padding: 1vmin;
+    margin: .2vmin;
+    /* background: rgba(255, 0, 0, 0.4); */
+    transform: skewX(-20deg);
+    border: 1px solid #ccc;
+}
+.personal {
+    font-size: 4vmin;
+    font-weight: bold;
+    color: rgb(60, 60, 60);
+}
+.you > .chances {
+    margin-left: 5vmin;
+}
+.you > .chances > .chance{
+    transform: skewX(20deg);
+}
+.opponent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.versus {
+    width: 15vmin;
+    height: auto;
+    background: rgb(95, 35, 35);
+    font-weight: bold;
+    /* box-shadow: 0vmin 0vmin 0vmin .5vmin rgb(44, 31, 31); */
+    position: absolute;
+    top: 3vmin;
+    left: 46%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: .2vmin;
+    color: rgb(60, 60, 60);
+}
+
+.versus .text {
+    font-size: 8vmin;
+    text-align: center;
+}
+.round {
+    width: 100%;
+    padding: .5vmin;
+    text-align: center;
+    border-top: .1vmin solid rgb(150, 150, 150);
+    font-size: 3vmin;
+}
+
+.game{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+    /* height: 50vmin; */
+    z-index: 0;
+}
+
+.game_side{
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+}
+.toggleTable {
+    position: absolute;
+    right: 0;
+    font-size: 5vmin;
+    transform: rotateX(360deg);
+}
+
+.table  {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30vmin;
+    background: #aaa;
+    height: 100%;
+    margin-right: 2vmin;
+    padding: 1vmin;
+    border-radius: .5vmin;
+    font-family: Arial, Helvetica, sans-serif;
+    opacity: .4
+}
+.table:hover {opacity: 1;transition: .5s;}
+table,th,td{
+    border: 1px solid rgb(143, 143, 143);
+    border-collapse: collapse;
+}
+table {
+    width: 100%; 
+    height: auto;
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+}
+th {
+    font-size: 5vmin;
+    border-bottom: 1px solid rgb(143, 143, 143);
+    border-top: none;
+    border-left: none;
+}
+.tr{
+    border-bottom: 1px solid #222;
+    border-bottom: none;
+    border-right: none;
+}
+.win {
+    font-weight: bold;
+    font-size: 3.5vmin;
+
+}
+.rt-border {
+    border-right: none;
+}
+tr .winning{
+    color: #000;
+    border-top: none;
+}
+td{
+    text-align: center;
+    font-size: 3vmin;
+    border-bottom: none;
+    border-left: none;
+}
+.evaluate {
+    width: 100%;
+    left: 30%;
+    margin-top: 6vmin;
+    display: flex;
+    justify-content: center;
+    font-size: 4vmin;
+    font-weight: bold;
+}
+.playerW{margin-inline-end: 1vmin;transition: .5s all;}
+sup{font-size: 3vmin;color:#333}
+
+
+/* mobile */
+
+@media screen and (max-width: 1261px) {
+    body {
+        background: #000;
+    }
+
+    .game{
+        justify-content: space-between;
+        margin-left: 2vmin;
+    }
+}
+
+@media screen and (max-width: 933px) {
+    .game {
+        overflow: hidden;
+    }
+    .game{
+        /* flex-direction: column; */
+        justify-content: space-between;
+        margin-left: 2vmin;
+    }
+    .table {
+        transform: translateX(4vmin);
+    }
+
+}
+
+/* into */
+
+.intro {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100vmin;
+    background: rgba(0, 0, 0, 0.87);
+    z-index: 1000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.intro_fill {
+    background: #000;
+    width: 50vmin;
+    height: auto;
+    color: #ccc;
+    padding: 1vmin;
+    font-size: 2vmin;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.slide{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mode {
+    justify-content: space-around;
+}
+input[type='radio'] {
+    cursor: pointer;
+}
+.selection{
+    flex-direction: column;
+}
+.select_player{ 
+    margin-bottom: 2vmin;
+}
+.select_ {
+    width: 5vmin;
+    height: 5vmin;
+    font-size: 3vmin;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background: rgb(17, 17, 17);
+    color: #aaa;
+}
+
+.activate_select {
+    color: rgb(17, 17, 17);
+    background: rgb(148, 147, 147);
+}
+
+.input_field{
+    border: 1px solid #aaa;
+    background: transparent;
+    padding: 0.5vmin;
+    outline: none;
+    color: #fff;
+}
+.add_round {
+    font-size: 9vmin;
+    font-weight: bold;
+    margin-right: 2vmin;
+    transition: .5s font;
+}
+.select_round{
+    cursor: pointer;
+    font-size: 3vmin;
+    font-weight: bold;
+    border: none;
+    border-radius: .2vmin;
+    transition: .5s;
+}
+.select_round:hover{
+    background: #222;
+    color: #ccc;
+}
+
+.overview{
+
+}
+
+.player{
+    font-size: 9vmin;
+    margin-left: .4rem;
+    margin-right: .4rem;
+    margin-bottom: 0;
+}
+.name{text-align: center;margin: 0;}
+.intro_btn{width: 100%;display: flex;justify-content: center;margin-top: 2vmin;}
+.intro_btn button {
+    padding: 0vmin;
+    width: 40vmin;
+    font-size: 3.5vmin;
+    font-weight: bold;
+    background: #222;
+    border: none;
+    color: #aaa;
+    border-radius: .3vmin;
+    cursor: pointer;
+}
+
+
+.active{
+    color: #ccc;
 }

@@ -1,24 +1,30 @@
-import Xando from "./xando.js";
-import Gamepad from "./gamepad.js";
+import XOIntro from "./xando_intro.js";
+// import XOstate from "./xando_state.js";
+// import Xando from "./xando.js";
+// import Gamepad from "./gamepad.js";
 
-const game_board = document.getElementById("game_board");
+const beforeUnloadListener = (e) => {
+    e.preventDefault();
+    return e.returnValue = "Are you sure you want to exit?"
+};
 
-const xando = new Xando(game_board);
+window.addEventListener("beforeunload", beforeUnloadListener, {once:true})
 
-xando.initialize()
+const intro_board = document.querySelector("#intro")
+const intro =  new XOIntro(intro_board)
 
-// MOVE SELECTOR
+intro.initiate()
 
-const select_pad = document.getElementById("select");
+// const game_board = document.getElementById("game_board");
 
-const game_pad = new Gamepad(select_pad);
+//         const xando = new Xando(game_board);
 
-game_pad.initialize()
+//         xando.initialize() // true | false
 
-window.addEventListener('keydown', game_pad.controls)
+//             const select_pad = document.getElementById("select");
+//         // if(this.setpending === true) {
+//             // We want to enable the gamepad
+//             const game_pad = new Gamepad(select_pad);
+//             game_pad.initialize()
 
-// select_pad.addEventListener("transitionend", () => {
-//     window.addEventListener('keydown', game_pad.controls)
-// })
-
-// 
+//             window.addEventListener('keydown', game_pad.controls)

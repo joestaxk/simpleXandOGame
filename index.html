@@ -8,19 +8,64 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <h1 class="game_title"><span class="x">X</span>and<span class="o">O</span></h1>
-    <div id="game_board">
-        <!-- <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="select">X</div> -->
+    <div class="intro">
+        <div id="intro" class="intro_fill">
+            <div class="intro_btn">
+                <button id="navigate">Next</button>
+            </div>
+        </div>
     </div>
-    <script src="app.js" type="module"></script>
+
+    <div class="game_container">
+        <div class="game_header">
+            <!-- your side -->
+            <div class="you">
+                <div class="x personal" id="playerx"></div>
+                chance to win:
+                <div class="chances">
+                    <div class="chance" id="chanceX"></div><div class="chance" id="chanceX"></div><div class="chance" id="chanceX"></div><div class="chance" id="chanceX"></div><div class="chance" id="chanceX"></div> <div class="chance" id="chanceX"></div>
+                </div>
+            </div>
+            <!-- vs -->
+            <div class="versus">
+                <div class="text">Vs</div>
+                <div class="round" id="rounds"></div>
+            </div>
+            <!-- opponent side -->
+            <div class="opponent">
+                <div class="o personal" id="playero"></div>
+                chance to win:
+                <div class="chances">
+                    <div class="chance" id="chanceO"></div><div class="chance" id="chanceO"></div><div class="chance" id="chanceO"></div><div class="chance" id="chanceO"></div><div class="chance" id="chanceO"></div><div class="chance" id="chanceO"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- gameside -->
+        <div class="game">
+            <div class="game_side">
+                <!-- <h1 class="game_title"><span class="x">X</span>and<span class="o">O</span></h1> -->
+                <div id="game_board"></div>
+            </div>
+            <!-- nav -->
+            <!-- <div class="toggleTable"><p>showTable</p></div> -->
+            <div class="table">
+                <table id="leaderboard">
+                    <tr>
+                        <th>X</th>
+                        <th class="winning rt-border">O</th>
+                    </tr>
+                    <!-- <tr class="tr">
+                        <td>1</td>
+                        <td class="win rt-border">2</td>
+                    </tr> -->
+                </table>
+                <div class="evaluate" id="eval">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js" defer type="module"></script>
 </body>
 </html>
