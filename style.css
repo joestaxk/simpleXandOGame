@@ -71,7 +71,7 @@ body {
 
 .game_header {
     width: 100%;
-    height: 10vmin;
+    min-height: 10vmin;
     background: #000;
     display: flex;
     justify-content: space-between;
@@ -150,11 +150,16 @@ body {
     z-index: 0;
 }
 
-.game_side{
-    /* display: flex;
+.bet {
     flex-direction: column;
-    justify-content: center;
-    align-items: center; */
+}
+.bet p {text-align: center;}
+.input_amt *:not(.input_amt *:last-child) {
+    margin-bottom: 1vmin;
+}
+input[type=number] {
+    text-align: center;
+    width: 15vmin;
 }
 .toggleTable {
     position: absolute;
@@ -359,16 +364,19 @@ input[type='radio'] {
 .intro_btn button {
     padding: 0vmin;
     width: 40vmin;
-    font-size: 3.5vmin;
-    font-weight: bold;
+    font-size: 3vmin;
+    font-weight: 550;
     background: #222;
     border: none;
     color: #aaa;
     border-radius: .3vmin;
     cursor: pointer;
 }
+#scoreX,#scoreO{
+    font-size: 3.5vmin;
+}
 
-
+p{margin: .5vmin}
 .active{
     color: #ccc;
 }

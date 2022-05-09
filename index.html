@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="intro">
-        <div id="intro" class="intro_fill">
+        <div id="intro" class="intro_fill"> 
             <div class="intro_btn">
                 <button id="navigate">Next</button>
             </div>
@@ -20,6 +20,7 @@
         <div class="game_header">
             <!-- your side -->
             <div class="you">
+                x
                 <div class="x personal" id="playerx"></div>
                 chance to win:
                 <div class="chances">
@@ -33,6 +34,7 @@
             </div>
             <!-- opponent side -->
             <div class="opponent">
+                o
                 <div class="o personal" id="playero"></div>
                 chance to win:
                 <div class="chances">
@@ -44,13 +46,16 @@
         <!-- gameside -->
         <div class="game">
             <div class="game_side">
-                <!-- <h1 class="game_title"><span class="x">X</span>and<span class="o">O</span></h1> -->
                 <div id="game_board"></div>
             </div>
             <!-- nav -->
-            <!-- <div class="toggleTable"><p>showTable</p></div> -->
             <div class="table">
+                <div class="">Betting on</div>
                 <table id="leaderboard">
+                    <tr>
+                        <th id="amountX">$0</th>
+                        <th id="amountO" class="winning rt-border">$0</th>
+                    </tr>
                     <tr>
                         <th>X</th>
                         <th class="winning rt-border">O</th>

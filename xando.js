@@ -1,6 +1,7 @@
 import XOstate from "./xando_state.js";
 import startLearning, { destroyxandolearningprocess } from "./xandolearningprocess.js";
 import Gamepad from "./gamepad.js";
+import XOIntro from "./xando_intro.js";
 // import Gamepad from "./gamepad.js";
 // Using enter we decide who plays next
 
@@ -217,52 +218,85 @@ export class PlotXandO extends Xando {
         // show button for reset
         // reset game and remove rounds
 
-        const checkRounds = XOstate.getUserInfoRound
-        const compareRound = XOstate.getCurrentRound;
+        const totalRound = XOstate.getUserInfoRound  // 3
+        const currentRound = XOstate.getCurrentRound; // 1
         // making certain variables available for this helper
         let getCellId = this.getCellId;
         let game_structure = this.game_structure
         let update_round = this.updateRounds // function
-           
-        if(checkRounds >= compareRound && XOstate.getWinner.length) { // win
+
+        if(totalRound >= currentRound && XOstate.getWinner.length) { // win
             // Update table
             this.leaderBoard()
             restructureGameBuildHelper()
-
-        }else if(checkRounds >= compareRound && !XOstate.getWinner.length){  // draw
+        }
+        else if(totalRound >= currentRound && !XOstate.getWinner.length){  // draw
             this.leaderBoard()
             restructureGameBuildHelper()
-        }
-
-        if(checkRounds === compareRound && XOstate.getWinner.length){
-            this.leaderBoard()
-            // compare winner 
-            let winnerText = XOstate.getTotalRoundWinner;
-            let alertText  = "";
-
-            if(winnerText === "o"){
-                alertText = "O wins, cancel to refresh a new game or okay to start new round"
-            }else if(winnerText === "x"){
-                alertText = "O wins, cancel to refresh a new game or okay to start new round"
-            }else if(winnerText === "draw"){
-                alertText = "Draw, cancel to refresh a new game or okay to start new round"
-            }
-            const quitGame = confirm(alertText);
-            if(quitGame){
-
-            }
-        }
-
-        function restructureGameBuildHelper() {
             // game still continue
-            XOstate.setCurrentRound = 1; // increment round
-            // reset game:
-            getCellId = []
+        }
+        function restructureGameBuildHelper() {
+            const totalRound = XOstate.getUserInfoRound  // 3
+            const currentRound = XOstate.getCurrentRound; // 1
             // remove the event from the select tile
             const select_pad = document.getElementById("select");
-            // We want to disaable the gamepad
+              
             const game_pad = new Gamepad(select_pad);
-            window.removeEventListener('keydown', game_pad.controls)
+            if(currentRound >= totalRound) {
+                return cancelGame()
+            } // increment 
+            
+            function cancelGame() {
+                const intro = document.querySelector(".intro")
+                const intro_b = document.querySelector("#intro")
+                // We want to disaable the gamepad
+                window.removeEventListener('keydown', game_pad.controls)
+                // reset round
+                XOstate.setCurrentRound = 0
+                XOstate.addBetAmount = {x: 0, o: 0, perstake: 0};
+                intro.style.cssText="display:flex";
+                const new_intro = new  XOIntro(intro_b, 4)
+                new_intro.initiate()
+            }
+
+            // game still continue
+            if(currentRound < totalRound) {
+                // this is where the game permanently ends
+                XOstate.setCurrentRound = 1;
+            } // increment round
+            // reset game:
+            getCellId = []
+
+            // If there's bet
+            if(XOstate.isThereBet) {
+                const betAmountX = document.querySelector("#amountX")
+                const betAmountO = document.querySelector("#amountO")
+
+                const getWinner = XOstate.getPlayerThatWin;
+                const userInfo = XOstate.getUserInfo
+
+                if(parseInt(userInfo.userX.betAmount) < userInfo.perstake || parseInt(userInfo.userO.betAmount) < userInfo.perstake){
+                    alert("you guys ran out of money");
+                    cancelGame()
+                    return;
+                }
+                
+                // top winner's amount, reduce loser's own
+                if(getWinner === "x"){
+                    const deduct   = parseInt(userInfo.userO.betAmount) - parseInt(userInfo.perstake);
+                    const increase = parseInt(userInfo.userX.betAmount) + parseInt(userInfo.perstake);
+
+                    XOstate.addBetAmount = {x: increase, o: deduct}
+                    betAmountX.textContent = `$${userInfo.userX.betAmount}`;
+                    betAmountO.textContent = `$${userInfo.userO.betAmount}`;
+                }else if(getWinner === "o") {
+                    const deduct   = parseInt(userInfo.userX.betAmount) - parseInt(userInfo.perstake);
+                    const increase = parseInt(userInfo.userO.betAmount) + parseInt(userInfo.perstake);
+                    XOstate.addBetAmount = {x: deduct, o: increase}
+                    betAmountX.textContent = `$${userInfo.userX.betAmount}`;
+                    betAmountO.textContent = `$${userInfo.userO.betAmount}`;
+                }
+            }
             // Destroy process learning
             destroyxandolearningprocess()
             XOstate.resetBoard =  game_structure;
@@ -274,10 +308,15 @@ export class PlotXandO extends Xando {
             const chancesX = Array.from(document.querySelectorAll("#chanceX")) // Nodelist        
             const chancesO = Array.from(document.querySelectorAll("#chanceO")) // Nodelist
             const BGTransparent = `background: transparent;transition:.5s all`
-            [chancesO, chancesX].flatMap(E => E.style.cssText = BGTransparent); // REMOVE ALL LAST AND SET CURRENT
+            chancesO.forEach(E => E.style.cssText = BGTransparent); // REMOVE ALL LAST AND SET CURRENT
+            chancesX.forEach(E => E.style.cssText = BGTransparent); // REMOVE ALL LAST AND SET CURRENT
+
         }
     }
-
+    totalGamDestroy(){
+        this.restructureGameBuild();
+    
+    }
     leaderBoard() {
         const getwinner = XOstate.getPlayerThatWin;
         const boardMarkup = `

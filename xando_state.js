@@ -17,17 +17,21 @@ var state = {
     currentRound: 1,
     userInfo: {
         userX:{
-            username:""
+            username:"",
+            betAmount: 0
         },
         userO: {
-            username:""
+            username:"",
+            betAmount: 0
         },
-        round: 0
+        round: 0,
+        perstake: 0,
     },
     intro: false,
     owinningPoint: 0,
     xwinningPoint: 0,
-    perPoint: 5
+    perPoint: 5,
+    isThereBet: false,
 }
 
 export default class XOstate {
@@ -38,19 +42,34 @@ export default class XOstate {
             return state.nextplayer = value;
         }
     }
+
+    static set addBetAmount(value) {
+        state.userInfo.userX.betAmount = value.x;
+        state.userInfo.userO.betAmount = value.o;
+        state.userInfo.perstake = value.perstake?value.perstake:state.userInfo.perstake
+        return state.isThereBet = true
+    }
+    static get isThereBet() {
+        return state.isThereBet
+    }
+
+
     static set setCurrentRound(value) {
         state.currentRound += value ;
     }
     static get getCurrentRound() {
         return state.currentRound
     }
+
     static set setUserInfo(value) {
         const whichSide = value.choose === "x" ? state.userInfo.userX : state.userInfo.userO;
         whichSide.username = value.user ;
     }
+
     static get getUserInfo() {
         return state.userInfo;
     }
+
     static set setUserInfoRound(value) {
         state.userInfo.round = value ;
     }
@@ -202,6 +221,10 @@ export default class XOstate {
         }
         // get the wimmer
         state.theWinnerIs = value
+    }
+
+    static get getTotalPlayerPointEach(){
+        return {xScore: state.xwinningPoint, oScore: state.owinningPoint}
     }
 
     static get getTotalPlayerPoint() {

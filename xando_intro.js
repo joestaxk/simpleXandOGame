@@ -13,8 +13,9 @@ import Gamepad from "./gamepad.js";
             <input type="radio" name="mode" id="mode" value="opponent" autocomplete="off"> <label for="mode">Vs friend</label>
         </div>
         </div>`,
+
         `<div data-id="1" class="slide selection">
-        <p id="message"></p>
+        <p id="message">Pick your player first</p>
         <div class="select_player">
             <button class="select_" id="select_tool" data-value="X">X</button>
             <button class="select_" id="select_tool" data-value="O">O</button>
@@ -24,6 +25,7 @@ import Gamepad from "./gamepad.js";
             <input type="text" class="input_field" id="select_user" placeholder="type name" autocomplete="off"/>
         </div>
         </div>`,
+
         `<div data-id="2" class="slide">
             <p id="message">Set Game round</p>
         <div class="add_round" id="increment">
@@ -34,7 +36,36 @@ import Gamepad from "./gamepad.js";
             <button class="select_round" id="rounddown" data-inc="-1">&DownArrow;</button>
         </div>
         </div>`,
-        `<div data-id="3" class="slide">
+
+        `
+        <div data-id="3" class="slide bet">
+            <h2>Do you guys choose to bet?</h2>
+            <p>Make sure you bet reponsibly</p>
+            <p id="message"></p>
+            
+            <div class="input_amt">
+                <div class="inputs">
+                    <label for="">Staking per round</label>
+                    <input type="number" class="input_field" id="staking" placeholder="type amount" autocomplete="off"/>
+                </div>
+
+                <div class="inputs">
+                    <label for="">choose amount For <span id="bet_nameX"></span></label>
+                    <input type="number" class="input_field" id="bet_amountX" placeholder="type amount" autocomplete="off"/>
+                </div>
+                <div class="inputs">
+                    <label for="">choose amount For <span id="bet_nameO"></span></label>
+                    <input type="number" class="input_field" id="bet_amountO" placeholder="type amount" autocomplete="off"/>
+                </div>
+                </div>
+                <div class="intro_btn">
+                    <button id="bet_btn">place</button>
+                </div>
+        </div>
+        `,
+
+        `<div data-id="4" class="slide">
+           <span id="scoreX"></span>
             <div class="overview">
                 <div class="player">X</div>
                 <div class="name" id="x"></div>
@@ -44,21 +75,30 @@ import Gamepad from "./gamepad.js";
                 <div class="player">O</div>
                 <div class="name" id="o"></div>
             </div>
+           <span id="scoreO"></span>
         </div> `,
-        `<div data-id="4" class="slide">
+        `<div data-id="5" class="slide">
         <p id='message'></p>
     </div> `
     ]
     const intro_board = document.querySelector("#intro");
 export default class XOIntro {
-    constructor(introboard) {
-        const navigate = document.getElementById("navigate")
+    constructor(introboard, stage) {
         this.introboard = introboard;
+        this.newStage = stage
     }
 
     initiate() {
         // add event to the navigator
         navigate.addEventListener("click", Navigate)
+        if(this.newStage > 0) {
+            // clear any thing odd
+             // push in our first intro
+            this.introboard.insertAdjacentHTML('afterbegin', show_stage[this.newStage])
+            //first, add events to all coming intro
+            afterFutureEvent(this.newStage, XOstate.getTotalPlayerPointEach)
+            return;
+        }
         // push in our first intro
         this.introboard.insertAdjacentHTML('afterbegin', show_stage[nextSlide])
         //first, add events to all coming intro
@@ -110,14 +150,24 @@ function futureEventListener(stage) {
             setRoundEventListener();
         break;
         case 3:
-            overviewEventListener();
+            setBetEventListener();
         break;
         case 4:
+            overviewEventListener();
+        break;
+        case 5:
             startGame();
         break;
     }
 }
-
+ function afterFutureEvent(stage, domChange) {
+    stage = typeof stage === "number" ? stage : null;
+    switch(stage){
+        case 4:
+            overviewEventListener(domChange);
+        break;
+    }
+}
 function modeEventListener(){
     const subject = document.querySelectorAll("#mode");
     if(!subject) return;
@@ -178,7 +228,6 @@ function userSelectEventListener(){
                 userInfo.userOTool = "o"
                 choose="o"
              }
-            // subject_select_name.textContent = ''
             //  save this
             // enable input
             subject_select_user.removeAttribute("disabled")
@@ -284,20 +333,96 @@ function setRoundEventListener(){
 
 }
 
-function overviewEventListener(ev){
+function setBetEventListener() {
+    const staking = document.querySelector("#staking");
+    const bet_nameX = document.querySelector("#bet_nameX");
+    const bet_nameO = document.querySelector("#bet_nameO");
+
+    const message = document.querySelector("#message");
+    const action_btn = document.querySelector("#bet_btn");
+
+    const bet_amountX = document.querySelector("#bet_amountX");
+    const bet_amountO = document.querySelector("#bet_amountO");
+
+    if(staking&&bet_amountO&&bet_amountX&&bet_nameO&&bet_nameX) {
+        // continue coding
+        navigate.textContent = "Skip Bet?"
+        bet_nameX.textContent = XOstate.getUserInfo.userX.username
+        bet_nameO.textContent = XOstate.getUserInfo.userO.username
+
+        bet_amountO.setAttribute("disabled",1);
+        bet_amountX.setAttribute("disabled",1);
+
+        staking.addEventListener("keyup", addStakes)
+
+        function addStakes(ev) {
+            const target = ev.target;
+            if(target.value < 100 || target.value > 500){
+                bet_amountO.setAttribute("disabled",1);
+                bet_amountX.setAttribute("disabled",1);        
+                return message.textContent = "stake is min:- 10, max:- 500";
+            }
+            message.textContent = ""
+            bet_amountO.removeAttribute("disabled",1);
+            bet_amountX.removeAttribute("disabled",1);
+        }
+
+        action_btn.addEventListener("click", placeBet)
+        
+        function placeBet() {
+            if(!bet_amountX.value||!bet_amountO.value) return message.textContent = "Add staking amount for both user.";
+            if(parseInt(bet_amountO.value) < parseInt(staking.value) || parseInt(bet_amountX.value) < parseInt(staking.value)) return message.textContent = "each user must have above their stake"
+            message.textContent = ""
+
+            // save userbet amount
+            XOstate.addBetAmount = {x: parseInt(bet_amountX.value), o: parseInt(bet_amountO.value), perstake: parseInt(staking.value)}
+            navigate.textContent = "Skip"
+            // update ui
+            //  Bet amount
+            let betAmountX = document.querySelector("#amountX")
+            let betAmountO = document.querySelector("#amountO")
+            
+            betAmountO.textContent = `$${XOstate.getUserInfo.userO.betAmount}`
+            betAmountX.textContent = `$${XOstate.getUserInfo.userX.betAmount}`
+
+            // remove  event
+            action_btn.removeEventListener("click", placeBet);
+            staking.removeEventListener("click", addStakes)
+            action_btn.remove();
+        }
+        
+        // skip
+        isPreviousValid=true;
+        doNextSlide(isPreviousValid)
+    }
+}
+
+function overviewEventListener(opt){
+    opt = typeof opt === "object" ? opt : null
+
     const x = document.querySelector('#x')    
     const o = document.querySelector('#o')
 
     if(!x||!o)return;
-
+    
     x.textContent = XOstate.getUserInfo.userX.username
     o.textContent = XOstate.getUserInfo.userO.username
+    if(opt){
+        navigate.textContent = "Game Over"
+        let scoreX=  document.querySelector('#scoreX')  
+        let scoreO=  document.querySelector('#scoreO')
+        // if(!scoreO||!scoreX) return;
+        scoreX.textContent = opt.xScore >= 5 ? opt.xScore/5 : 0
+        scoreO.textContent = opt.oScore >= 5 ? opt.oScore/5 : 0
+    
+        navigate.removeEventListener("click", Navigate)
+    }
     isPreviousValid=true;
     doNextSlide(isPreviousValid)
 }
 
 function startGame() {
-  const message = document.querySelector("#message");
+  let message = document.querySelector("#message");
   message.textContent = "We are getting you ready"
   if(!message) return;
   const e = ["Use the Arrow key to navigate from one ceil to another", "use the alternative key AWSD, just like the arrow", "use the space or enter key to add your option", "wait loading!!!"]
@@ -334,15 +459,17 @@ function startGame() {
 
 function startGameNow() {
     const intro = document.querySelector(".intro")
-    intro.remove();
+    intro.style.cssText="display:none";
     // start game
     XOstate.setIntroState = true;
+    const oldEvent = document.querySelector(`[data-id="${show_stage.length-1}"]`)
+    oldEvent.remove()
 
     // xando need to start off with intro
     const game_board = document.getElementById("game_board");
     if(XOstate.getIntroState){
         const xando = new Xando(game_board);
-        xando.initialize() // true | false
+        xando.initialize() // true | falseintro
         if(xando.pending !== false) {
             const select_pad = document.getElementById("select");
         // if(this.setpending === true) {
